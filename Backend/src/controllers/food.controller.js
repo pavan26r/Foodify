@@ -6,27 +6,51 @@ const { v4: uuid } = require("uuid")
 
 
 async function createFood(req, res) {
-    if (!req.foodPartner) {
-        return res.status(403).json({ message: "Only food partners can upload food" });
+    try {
+        if (!req.foodPartner) {
+            return res.status(403).json({ message: "Only food partners can upload food" });
+        }
+
+        if (!req.foodPartner._id) {
+            return res.status(403).json({ message: "Partner authentication failed" });
+        }
+
+        // Check if file is uploaded
+        if (!req.file) {
+            return res.status(400).json({ message: "Video file is required" });
+        }
+
+        // Validate required fields
+        if (!req.body.name || !req.body.name.trim()) {
+            return res.status(400).json({ message: "Food name is required" });
+        }
+
+        console.log("Uploading file to storage...");
+        const fileUploadResult = await storageService.uploadFile(req.file.buffer, uuid());
+        
+        if (!fileUploadResult || !fileUploadResult.url) {
+            return res.status(500).json({ message: "Failed to upload video file" });
+        }
+
+        console.log("Creating food item in database...");
+        const foodItem = await foodModel.create({
+            name: req.body.name.trim(),
+            description: req.body.description || '',
+            video: fileUploadResult.url,
+            foodPartner: req.foodPartner._id
+        });
+
+        res.status(201).json({
+            message: "Food created successfully",
+            food: foodItem
+        });
+    } catch (err) {
+        console.error("CREATE FOOD ERROR:", err);
+        res.status(500).json({
+            message: "Internal Server Error",
+            error: err.message
+        });
     }
-
-    if (!req.foodPartner._id) {
-        return res.status(403).json({ message: "Partner authentication failed" });
-    }
-
-    const fileUploadResult = await storageService.uploadFile(req.file.buffer, uuid())
-
-    const foodItem = await foodModel.create({
-        name: req.body.name,
-        description: req.body.description,
-        video: fileUploadResult.url,
-        foodPartner: req.foodPartner._id
-    })
-
-    res.status(201).json({
-        message: "food created successfully",
-        food: foodItem
-    })
 }
 
 
@@ -59,7 +83,8 @@ async function likeFood(req, res) {
         })
 
         return res.status(200).json({
-            message: "Food unliked successfully"
+            message: "Food unliked successfully",
+            like: false
         })
     }
 
@@ -74,7 +99,8 @@ async function likeFood(req, res) {
 
     res.status(201).json({
         message: "Food liked successfully",
-        like
+        like: true,
+        likeData: like
     })
 
 }
@@ -100,7 +126,8 @@ async function saveFood(req, res) {
         })
 
         return res.status(200).json({
-            message: "Food unsaved successfully"
+            message: "Food unsaved successfully",
+            save: false
         })
     }
 
@@ -115,7 +142,8 @@ async function saveFood(req, res) {
 
     res.status(201).json({
         message: "Food saved successfully",
-        save
+        save: true,
+        saveData: save
     })
 
 }

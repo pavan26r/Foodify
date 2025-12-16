@@ -8,12 +8,14 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors({
-    origin: "http://localhost:5174",
+     origin: [
+        "http://localhost:5173",
+        "https://foodify-frontend-ten.vercel.app"
+    ],
     credentials: true
 }));
 app.use(cookieParser());
 app.use(express.json());
-
 app.get("/", (req, res) => {
     res.send("Hello World");
 })
