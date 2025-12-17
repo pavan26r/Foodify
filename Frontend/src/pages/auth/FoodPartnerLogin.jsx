@@ -13,15 +13,18 @@ const FoodPartnerLogin = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    const response = await axios.post("http://localhost:3000/api/auth/food-partner/login", {
+    try {
+      const response = await axios.post("https://foodify-ehzi.onrender.com/api/auth/food-partner/login", {
       email,
       password
     }, { withCredentials: true });
 
     console.log(response.data);
-
     navigate("/create-food"); // Redirect to create food page after login
-
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(error.response?.data?.message || "Login failed. Please try again.");
+    }
   };
 
   return (
@@ -50,4 +53,4 @@ const FoodPartnerLogin = () => {
   );
 };
 
-export default {FoodPartnerLogin};
+export default FoodPartnerLogin;

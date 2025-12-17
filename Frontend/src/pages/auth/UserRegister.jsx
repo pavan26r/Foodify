@@ -16,8 +16,19 @@ const UserRegister = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
 
+        // Basic validation
+        if (!firstName || !lastName || !email || !password) {
+            alert("Please fill in all fields");
+            return;
+        }
 
-        const response = await axios.post("http://localhost:3000/api/auth/user/register", {
+        if (password.length < 6) {
+            alert("Password must be at least 6 characters long");
+            return;
+        }
+
+        try {
+            const response = await axios.post("https://foodify-ehzi.onrender.com/api/auth/user/register", {
             fullName: firstName + " " + lastName,
             email,
             password
@@ -27,9 +38,24 @@ const UserRegister = () => {
         })
 
         console.log(response.data);
-
-        navigate("/")
-
+            alert("Registration successful! Redirecting...");
+            navigate("/user/login");
+        } catch (error) {
+            console.error("Registration error:", error);
+            console.error("Error response:", error.response?.data);
+            
+            let errorMessage = "Registration failed. Please try again.";
+            
+            if (error.response?.data) {
+                // Backend sent an error response
+                errorMessage = error.response.data.message || error.response.data.error || errorMessage;
+            } else if (error.message) {
+                // Network or other error
+                errorMessage = error.message;
+            }
+            
+            alert(errorMessage);
+        }
     };
 
     return (

@@ -8,7 +8,7 @@ const FoodPartnerRegister = () => {
 
   const navigate = useNavigate();
   
-  const handleSubmit = (e) => { 
+  const handleSubmit = async (e) => { 
     e.preventDefault();
 
     const businessName = e.target.businessName.value;
@@ -18,21 +18,49 @@ const FoodPartnerRegister = () => {
     const password = e.target.password.value;
     const address = e.target.address.value;
 
-    axios.post("http://localhost:3000/api/auth/food-partner/register", {
-      name:businessName,
+    // Basic validation
+    if (!businessName || !contactName || !phone || !email || !password || !address) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters long");
+      return;
+    }
+
+    try {
+      const apiUrl = "https://foodify-ehzi.onrender.com/api/auth/food-partner/register";
+      console.log("Calling API:", apiUrl);
+      
+      const response = await axios.post(apiUrl, {
+        name: businessName,
       contactName,
       phone,
       email,
       password,
       address
-    }, { withCredentials: true })
-      .then(response => {
+      }, { withCredentials: true });
+
         console.log(response.data);
+      alert("Registration successful! Redirecting...");
         navigate("/create-food"); // Redirect to create food page after successful registration
-      })
-      .catch(error => {
-        console.error("There was an error registering!", error);
-      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      console.error("Error response:", error.response?.data);
+      
+      let errorMessage = "Registration failed. Please try again.";
+      
+      if (error.response?.data) {
+        // Backend sent an error response
+        errorMessage = error.response.data.message || error.response.data.error || errorMessage;
+      } else if (error.message) {
+        // Network or other error
+        errorMessage = error.message;
+      }
+      
+      alert(errorMessage);
+    }
   };
 
   return (

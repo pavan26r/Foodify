@@ -50,20 +50,48 @@ const CreateFood = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
+        if (!videoFile) {
+            setFileError('Please select a video file');
+            return;
+        }
 
+        const formData = new FormData();
         formData.append('name', name);
         formData.append('description', description);
         formData.append("mama", videoFile);
 
-        const response = await axios.post("http://localhost:3000/api/food", formData, {
+        try {
+            console.log("Uploading food...");
+            const response = await axios.post("https://foodify-ehzi.onrender.com/api/food", formData, {
             withCredentials: true,
-        })
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
-        console.log(response.data);
-        navigate("/"); // Redirect to home or another page after successful creation
-        // Optionally reset
-        // setName(''); setDescription(''); setVideoFile(null);
+            console.log("Food created successfully:", response.data);
+            alert("Food uploaded successfully! Redirecting...");
+            
+            // Reset form
+            setName('');
+            setDescription('');
+            setVideoFile(null);
+            
+            navigate("/"); // Redirect to home after successful creation
+        } catch (error) {
+            console.error("Error creating food:", error);
+            console.error("Error response:", error.response?.data);
+            
+            let errorMessage = "Failed to upload food. Please try again.";
+            
+            if (error.response?.data) {
+                errorMessage = error.response.data.message || error.response.data.error || errorMessage;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+            
+            alert(errorMessage);
+        }
     };
 
     const isDisabled = useMemo(() => !name.trim() || !videoFile, [ name, videoFile ]);
@@ -166,4 +194,4 @@ const CreateFood = () => {
     );
 };
 
-export default {CreateFood};
+export default CreateFood;

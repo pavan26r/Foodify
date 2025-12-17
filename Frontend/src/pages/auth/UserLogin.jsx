@@ -12,8 +12,9 @@ const UserLogin = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
+    try {
     const response = await axios.post(
-      "http://localhost:3000/api/auth/user/login",
+        "https://foodify-ehzi.onrender.com/api/auth/user/login",
       {
         email,
         password
@@ -23,6 +24,10 @@ const UserLogin = () => {
 
     console.log(response.data);
     navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(error.response?.data?.message || "Login failed. Please try again.");
+    }
   };
 
   return (
