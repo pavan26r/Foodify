@@ -16,12 +16,12 @@ const Home = () => {
             })
             .catch((error) => {
                 console.error("Error fetching videos:", error);
-                if (error.response?.status === 401) {
-                    // ✅ Fixed: Ab ye refresh nahi karega, seedha base login page par bhejega
-                    navigate("/"); 
-                } else {
-                    console.error("Failed to load videos:", error.response?.data?.message || error.message);
-                }
+                // if (error.response?.status === 401) {
+                //     // ✅ Fixed: Ab ye refresh nahi karega, seedha base login page par bhejega
+                //     navigate("/"); 
+                // } else {
+                //     console.error("Failed to load videos:", error.response?.data?.message || error.message);
+                // }
             })
     }, [navigate]) // Added navigate to dependency array for best practice
 
