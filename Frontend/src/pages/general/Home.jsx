@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import '../../styles/reels.css'
 import ReelFeed from '../../components/ReelFeed'
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-    const [ videos, setVideos ] = useState([])
-    // Autoplay behavior is handled inside ReelFeed
+    const navigate = useNavigate();
+    const [videos, setVideos] = useState([])
 
     useEffect(() => {
         axios.get("https://foodify-ehzi.onrender.com/api/food", { withCredentials: true })
@@ -16,36 +17,32 @@ const Home = () => {
             .catch((error) => {
                 console.error("Error fetching videos:", error);
                 if (error.response?.status === 401) {
-                    // User not logged in, redirect to login
-                    window.location.href = "/user/login";
+                    // ✅ Fixed: Ab ye refresh nahi karega, seedha base login page par bhejega
+                    navigate("/"); 
                 } else {
                     console.error("Failed to load videos:", error.response?.data?.message || error.message);
                 }
             })
-    }, [])
-
-    // Using local refs within ReelFeed; keeping map here for dependency parity if needed
+    }, [navigate]) // Added navigate to dependency array for best practice
 
     async function likeVideo(item) {
+        const response = await axios.post("https://foodify-ehzi.onrender.com/api/food/like", { foodId: item._id }, { withCredentials: true })
 
-        const response = await axios.post("https://foodify-ehzi.onrender.com/api/food/like", { foodId: item._id }, {withCredentials: true})
-
-        if(response.data.like){
+        if (response.data.like) {
             console.log("Video liked");
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
-        }else{
+        } else {
             console.log("Video unliked");
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v))
         }
-        
     }
 
     async function saveVideo(item) {
         const response = await axios.post("https://foodify-ehzi.onrender.com/api/food/save", { foodId: item._id }, { withCredentials: true })
-        
-        if(response.data.save){
+
+        if (response.data.save) {
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))
-        }else{
+        } else {
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount - 1 } : v))
         }
     }
