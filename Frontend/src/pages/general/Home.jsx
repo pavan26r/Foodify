@@ -11,17 +11,13 @@ const Home = () => {
     useEffect(() => {
         axios.get("https://foodify-ehzi.onrender.com/api/food", { withCredentials: true })
             .then(response => {
-                console.log(response.data);
                 setVideos(response.data.foodItems || [])
             })
             .catch((error) => {
                 console.error("Error fetching videos:", error);
-                // if (error.response?.status === 401) {
-                //     // ✅ Fixed: Ab ye refresh nahi karega, seedha base login page par bhejega
-                //     navigate("/"); 
-                // } else {
-                //     console.error("Failed to load videos:", error.response?.data?.message || error.message);
-                // }
+                if (error.response?.status === 401) {
+                    console.log("Error is there problem in cookie ")
+                } 
             })
     }, [navigate]) // Added navigate to dependency array for best practice
 
