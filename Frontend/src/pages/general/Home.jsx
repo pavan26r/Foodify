@@ -16,7 +16,7 @@ const Home = () => {
             .catch((error) => {
                 console.error("Error fetching videos:", error);
                 if (error.response?.status === 401) {
-                    console.log("Error is there problem in cookie ")
+                    console.log("Error is there  .. problem in cookie ")
                 } 
             })
     }, [navigate]) // Added navigate to dependency array for best practice

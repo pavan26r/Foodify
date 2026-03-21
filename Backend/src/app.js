@@ -9,7 +9,7 @@ const cors = require('cors');
 const app = express();
 app.use(cors({
      origin: [
-        "http://localhost:5173",
+      //  "http://localhost:5173",
         "https://foodify-frontend-ten.vercel.app"
     ],
     credentials: true
