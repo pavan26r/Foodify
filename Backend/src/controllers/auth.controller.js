@@ -48,7 +48,7 @@ async function registerUser(req, res) {
         res.cookie("userToken", token, {
             httpOnly: true,
             sameSite: 'lax',
-            secure: false, // false for localhost, true for production HTTPS
+            secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
         
@@ -106,7 +106,7 @@ async function loginUser(req, res) {
         res.cookie("userToken", token, {
             httpOnly: true,
             sameSite: 'lax',
-            secure: false, // false for localhost, true for production HTTPS
+            secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
         
@@ -191,7 +191,7 @@ async function registerFoodPartner(req, res) {
     res.cookie("foodPartnerToken", token, {
         httpOnly: true,
         sameSite: 'lax',
-        secure: false, // false for localhost, true for production HTTPS
+        secure: true,
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
@@ -249,7 +249,7 @@ async function loginFoodPartner(req, res) {
         res.cookie("foodPartnerToken", token, {
             httpOnly: true,
             sameSite: 'lax',
-            secure: false, // false for localhost, true for production HTTPS
+            secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
         
