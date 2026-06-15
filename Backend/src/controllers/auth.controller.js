@@ -45,7 +45,7 @@ async function registerUser(req, res) {
         })
         
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.cookie("token", token, {
+        res.cookie("userToken", token, {
             httpOnly: true,
             sameSite: 'lax',
             secure: false, // false for localhost, true for production HTTPS
@@ -103,7 +103,7 @@ async function loginUser(req, res) {
         }
         
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.cookie("token", token, {
+        res.cookie("userToken", token, {
             httpOnly: true,
             sameSite: 'lax',
             secure: false, // false for localhost, true for production HTTPS
@@ -127,7 +127,7 @@ async function loginUser(req, res) {
     }
 }
 async function logoutUser(req, res) {
-    res.clearCookie("token");
+    res.clearCookie("userToken");
     res.status(200).json({
         message: "User logged out successfully"
     })
@@ -188,7 +188,7 @@ async function registerFoodPartner(req, res) {
       process.env.JWT_SECRET
     );
 
-    res.cookie("token", token, {
+    res.cookie("foodPartnerToken", token, {
         httpOnly: true,
         sameSite: 'lax',
         secure: false, // false for localhost, true for production HTTPS
@@ -246,7 +246,7 @@ async function loginFoodPartner(req, res) {
         }
         
         const token = jwt.sign({ id: foodPartner._id }, process.env.JWT_SECRET);
-        res.cookie("token", token, {
+        res.cookie("foodPartnerToken", token, {
             httpOnly: true,
             sameSite: 'lax',
             secure: false, // false for localhost, true for production HTTPS
@@ -270,7 +270,7 @@ async function loginFoodPartner(req, res) {
     }
 }
 async function logoutFoodPartner(req, res) {
-    res.clearCookie("token");
+    res.clearCookie("foodPartnerToken");
     res.status(200).json({
         message: "Food partner logged out successfully"
     })
