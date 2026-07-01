@@ -47,7 +47,7 @@ async function registerUser(req, res) {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         res.cookie("userToken", token, {
             httpOnly: true,
-            sameSite: 'lax',
+            sameSite:'none',
             secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
@@ -105,7 +105,7 @@ async function loginUser(req, res) {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         res.cookie("userToken", token, {
             httpOnly: true,
-            sameSite: 'lax',
+            sameSite: 'none', 
             secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
@@ -190,7 +190,7 @@ async function registerFoodPartner(req, res) {
 
     res.cookie("foodPartnerToken", token, {
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite:'none', 
         secure: true,
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
@@ -248,7 +248,7 @@ async function loginFoodPartner(req, res) {
         const token = jwt.sign({ id: foodPartner._id }, process.env.JWT_SECRET);
         res.cookie("foodPartnerToken", token, {
             httpOnly: true,
-            sameSite: 'lax',
+            sameSite: 'none', 
             secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
