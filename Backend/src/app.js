@@ -8,11 +8,10 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors({
-     origin: [
-          
-          'https://foodify-mu-indol.vercel.app'
-    ],
-    credentials: true
+  origin: 'https://foodify-mu-indol.vercel.app', // Allow only your frontend domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Enable this if you are using cookies/sessions
 }));
 app.use(cookieParser());
 app.use(express.json());
