@@ -18,8 +18,6 @@ const FoodPartnerLogin = () => {
       email,
       password
     }, { withCredentials: true });
-
-    console.log(response.data);
     navigate("/create-food"); // Redirect to create food page after login
     } catch (error) {
       console.error("Login error:", error);
